@@ -1,2 +1,2 @@
-rm **/*.pyc
+# rm **/*.pyc
 from arablepy import ArableClient
