@@ -5,7 +5,7 @@ with open('requirements.txt') as f:
 
 setup(
    name='arablepy',
-   version='1.0',
+   version='0.1',
    description='A useful module for making calls to arable api v2',
    author='Walter Jove',
    author_email='walter.jove@arable.com',
