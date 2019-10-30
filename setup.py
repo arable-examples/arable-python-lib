@@ -11,9 +11,5 @@ setup(
    author_email='walter.jove@arable.com',
    url="https://github.com/walterarable/arable-python-v2",
    packages=['arable-python'],  #same as name
-   install_requires=requirements, #external packages as dependencies
-   scripts=[
-            'scripts/cool',
-            'scripts/skype',
-           ]
+   install_requires=requirements #external packages as dependencies
 )
