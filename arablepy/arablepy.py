@@ -170,7 +170,7 @@ class ArableClient(object):
 
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def schema(self, table, df=False):
+    def schema(self, table=None, df=False):
         """ See available tables and data dictionary for specific tables
             >>> client.schema()
             :param table: optional; string. See data dictionary for the specified table
