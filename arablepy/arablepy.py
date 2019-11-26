@@ -5,7 +5,7 @@ import requests
 
 class ArableClient(object):
     """ A client for connecting to Arable and making data queries.
-        >>> from arable.client import ArableClient
+        >>> from arablepy import ArableClient
         >>> client = ArableClient()
         >>> client.connect(email='user@loremipsum.com', password='#@#SS')
     """
@@ -138,15 +138,23 @@ class ArableClient(object):
             >>> csv = client.query('hourly', format='csv', devices=device)
             >>> dt = datetime.datetime.now() - datetime.timedelta(hours=12)
             >>> start = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-            >>> json = client.query(devices=devices, measure='L1_hourly', start=start)
-            :param devices: list of device names to retrieve data for
-            :param location: optional; id of a location to retrieve data for; devices ignored if this is present
-            :param start_time: beginning of query time range
-            :param end_time: optional; end of query time range
-            :param order: optional; "time" (time ascending) or "-time" (time descending)
+            >>> json = client.query(devices=devices, measure='hourly', start=start)
+            :param device: list of device names to retrieve data for (required if location not specified)
+            :param location: optional; id of a location to retrieve data for; devices ignored if this is present (required if device not specified)
+            :param start_time: beginning of query time range string <date-time> Start date/time, e.g., 2019-01-01 or 2019-01-01T00:00:00Z
+            :param df: optional; return pandas dataframe. Default: "False"
+            :param end_time: optional; end of query time range string <date-time> End date/time, e.g., 2019-01-01 or 2019-01-01T00:00:00Z
+            :param order: optional; string Default: "asc" Enum: "asc" "desc"
             :param limit: optional; maximum number of data points to return; defaults to 1000
             :param format: optional; use format=csv to get csv-formatted data; otherwise data is returned as json
             :param select: optional; Comma-separated column list, e.g., time,device,location,tair
+            :param cursor: optional; string <cursor-token> Encoded cursor token (for pagination, from X-Cursor-Next response header)
+            :param temp: optional; string Enum: "C" "F" Temperature unit in either [C]elsius or [F]ahrenheit
+            :param pres: optional; string Enum: "mb" "kp" Pressure unit in either millibars [mb] or kilopascals [kp]
+            :param ratio: optional; string Enum: "dec" "pct" Ratio either as percent [pct] or decimal value [dec]
+            :param size: optional; string Enum: "in" "mm" Size unit in either [in]ches or millimeters [mm]
+            :param speed: optional; string Enum: "mps" "kph" "mph" Speed unit; meters per second [mps], kilometers per hour [kph], or miles per hour [mph]
+            :param local_time: optional; string Local time column specified as timezone name, offset seconds or ISO format(e.g. America/Los_Angeles, -14400, -10: 30)(optional)
         """
 
         self._check_connection()
@@ -162,8 +170,11 @@ class ArableClient(object):
 
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def schema(self, table=None, df=False):
-        """ See available tables
+    def schema(self, table, df=False):
+        """ See available tables and data dictionary for specific tables
+            >>> client.schema()
+            :param table: optional; string. See data dictionary for the specified table
+            >>> client.schema('daily')
         """
         self._check_connection()
 
