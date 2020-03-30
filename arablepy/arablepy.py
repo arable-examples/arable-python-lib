@@ -198,9 +198,9 @@ class ArableClient(object):
 
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    class Locations(object):
+    # class Locations(object):
         
-        def __init__(self):
+    #     def __init__(self):
             
 
 
