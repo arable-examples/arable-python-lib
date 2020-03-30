@@ -198,12 +198,20 @@ class ArableClient(object):
 
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def orgs(self, df=False):
+    class Locations(object):
+        
+        def __init__(self):
+            
+
+
+    def orgs(self, org_id=None, df=False):
         """
         """
         self._check_connection()
 
         url = ArableClient._base_url + "/orgs"
+        if org_id:
+            url += '/' + org_id
         return self._output(url=url, df=df, header=self.header)
 
     def search(self, name, suggest=False, df=False):
