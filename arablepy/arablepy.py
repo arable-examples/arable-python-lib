@@ -204,7 +204,7 @@ class ArableClient(object):
             
 
 
-    def orgs(self, org_id=None, df=False):
+    def orgs(self, org_id=None, users=False, df=False):
         """
         """
         self._check_connection()
@@ -212,6 +212,8 @@ class ArableClient(object):
         url = ArableClient._base_url + "/orgs"
         if org_id:
             url += '/' + org_id
+        if users:
+            url += '/' + 'users'
         return self._output(url=url, df=df, header=self.header)
 
     def search(self, name, suggest=False, df=False):
