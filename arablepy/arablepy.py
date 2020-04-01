@@ -204,7 +204,7 @@ class ArableClient(object):
             
 
 
-    def orgs(self, org_id=None, param, df=False):
+    def orgs(self, org_id=None, param=None, df=False):
         """
         """
         self._check_connection()
