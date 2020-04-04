@@ -1,1 +1,1 @@
-# from arablepy import ArableClient
+from .arablepy import ArableClient
