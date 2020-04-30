@@ -88,7 +88,7 @@ class ArableClient(object):
         """ Lists the devices associated with the user's group.
             >>> client.devices()
             :param name: optional; look up a single device by name (serial); ignored if device_id is present
-            >>> client.devices(name='A000##')
+            >>> client.devices(name='C000##')
             :param order: optional; field to order by when looking up multiple devices,
                 e.g. "name" for name ascending or "-name" for name descending (default "-last_post")
             :param limit: optional; max number of devices to retrieve when looking up multiple (default 24)
@@ -113,7 +113,7 @@ class ArableClient(object):
         #     url += "/email"
 
         params = {}
-        if order is not None:
+        if order is not None or name:
             params['order'] = order
         if order_by is not None:
             params['order_by'] = order_by
