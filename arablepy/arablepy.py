@@ -9,7 +9,7 @@ class ArableClient(object):
         >>> client = ArableClient()
         >>> client.connect(email='user@loremipsum.com', password='#@#SS')
     """
-    _base_url = "https://api-user.arable.cloud/api/v2"
+    _base_url = "https://api.arable.cloud/api/v2"
     _param_options = {"device", "end_time", "format", "limit", "location", "measure", "order", "select", "start_time", "temp"
                         "pres", "ratio", "size", "speed", "local_time"}
 
@@ -109,8 +109,8 @@ class ArableClient(object):
                 url += "/locations"
             elif find:
                 url += "/find"
-        # if email:
-        #     url += "/email"
+           # elif email:
+            #    url += "/email"
 
         params = {}
         if order is not None:
