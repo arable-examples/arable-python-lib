@@ -113,9 +113,9 @@ class ArableClient(object):
         #     url += "/email"
 
         params = {}
-        if order is not None or name:
+        if order is not None:
             params['order'] = order
-        if order_by is not None:
+        if order_by is not None or name:
             params['order_by'] = order_by
         else:
             params['order_by'] = 'state'    
