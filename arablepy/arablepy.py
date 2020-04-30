@@ -87,6 +87,7 @@ class ArableClient(object):
                 days=None, locations=False, find=False, df=False):
         """ Lists the devices associated with the user's group.
             >>> client.devices()
+            :param df: optional; show response as a pandas DataFrame object.
             :param name: optional; look up a single device by name (serial); ignored if device_id is present
             >>> client.devices(name='C000##')
             :param order: optional; field to order by when looking up multiple devices,
@@ -110,7 +111,7 @@ class ArableClient(object):
             elif find:
                 url += "/find"
            # elif email:
-            #    url += "/email"
+               # url += "/email"
 
         params = {}
         if order is not None:
@@ -130,23 +131,20 @@ class ArableClient(object):
             # r = requests.post(url, headers=self, )
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def data(self, table, df=False, **kwargs):
+    def data(self, table, df=False, devices=None, **kwargs):
         """ Query Arable prod data. One of devices or location must be provided, or no data will be retrieved.
-            >>> client.data()
-            >>> device="DeviceName"
-            >>> client.data(select='microclimate', device=device, measure="calibrated", limit=10000)
-            >>> csv = client.query('hourly', format='csv', devices=device)
-            >>> dt = datetime.datetime.now() - datetime.timedelta(hours=12)
+            >>> device="C00####"
             >>> start = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-            >>> json = client.query(devices=devices, measure='hourly', start=start)
-            :param device: list of device names to retrieve data for (required if location not specified)
+            >>> table = 'daily'
+            # Get data in a pandas DataFrame
+            >>> client.data(measure, device=device, start_time=start, df=True)
+            :param device: device name to retrieve data for (required if location not specified)
             :param location: optional; id of a location to retrieve data for; devices ignored if this is present (required if device not specified)
             :param start_time: beginning of query time range string <date-time> Start date/time, e.g., 2019-01-01 or 2019-01-01T00:00:00Z
             :param df: optional; return pandas dataframe. Default: "False"
             :param end_time: optional; end of query time range string <date-time> End date/time, e.g., 2019-01-01 or 2019-01-01T00:00:00Z
             :param order: optional; string Default: "asc" Enum: "asc" "desc"
             :param limit: optional; maximum number of data points to return; defaults to 1000
-            :param format: optional; use format=csv to get csv-formatted data; otherwise data is returned as json
             :param select: optional; Comma-separated column list, e.g., time,device,location,tair
             :param cursor: optional; string <cursor-token> Encoded cursor token (for pagination, from X-Cursor-Next response header)
             :param temp: optional; string Enum: "C" "F" Temperature unit in either [C]elsius or [F]ahrenheit
@@ -165,6 +163,8 @@ class ArableClient(object):
         for param in ArableClient._param_options:
             if kwargs.get(param):
                 params[param] = str(kwargs[param])
+        if params.get('device') and isinstance(params.get('device'), list):
+            print('yes')
         if not params.get('limit'):
             params['limit'] = '10000'
 
