@@ -131,7 +131,7 @@ class ArableClient(object):
             # r = requests.post(url, headers=self, )
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def data(self, table, df=False, devices=None, **kwargs):
+    def data(self, table, df=False, **kwargs):
         """ Query Arable prod data. One of devices or location must be provided, or no data will be retrieved.
             >>> device="C00####"
             >>> start = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -157,24 +157,34 @@ class ArableClient(object):
 
         self._check_connection()
 
-        url = ArableClient._base_url + "/data/" + table 
+        url = ArableClient._base_url + "/data/" + table                
 
         params = {}
         for param in ArableClient._param_options:
             if kwargs.get(param):
                 params[param] = str(kwargs[param])
-        if params.get('device') and not isinstance(params.get('device'), list):
-            print('no')
         if not params.get('limit'):
             params['limit'] = '10000'
 
         return self._output(url=url, df=df, header=self.header, params=params)
 
+    # def data(self, table, devices=None, **kwargs):
+    #     df = pd.DataFrame()
+    #     # Loop through devices002786'
+    #     for i in devices:
+    #         try:
+    #             df = df.append(client.query(table, device=i, df=True, **kwargs))
+    #         except:
+    #             continue
+    #     df.time = pd.to_datetime(df.time)
+    #     return df
+
     def schema(self, table=None, df=False):
         """ See available tables and data dictionary for specific tables
             >>> client.schema()
+            See schema as pandas DataFrame
             :param table: optional; string. See data dictionary for the specified table
-            >>> client.schema('daily')
+            >>> client.schema('daily', df=True)
         """
         self._check_connection()
 
