@@ -163,8 +163,8 @@ class ArableClient(object):
         for param in ArableClient._param_options:
             if kwargs.get(param):
                 params[param] = str(kwargs[param])
-        if params.get('device') and isinstance(params.get('device'), list):
-            print('yes')
+        if params.get('device') and not isinstance(params.get('device'), list):
+            print('no')
         if not params.get('limit'):
             params['limit'] = '10000'
 
