@@ -10,7 +10,7 @@ class ArableClient(object):
         >>> client.connect(email='user@loremipsum.com', password='#@#SS')
     """
     _base_url = "https://api.arable.cloud/api/v2"
-    _param_options = {"device", "end_time", "format", "limit", "location", "measure", "order", "select", "start_time", "temp"
+    _param_options = {"device","end_time", "format", "limit", "location", "measure", "order", "select", "start_time", "temp"
                         "pres", "ratio", "size", "speed", "local_time"}
 
     def __init__(self):
@@ -131,7 +131,18 @@ class ArableClient(object):
             # r = requests.post(url, headers=self, )
         return self._output(url=url, df=df, header=self.header, params=params)
 
-    def data(self, table, df=False, **kwargs):
+    def _query(self, table, params=None):
+
+        self._check_connection()
+
+        url = ArableClient._base_url + "/data/" + table                
+
+        if not params.get('limit'):
+            params['limit'] = '10000'
+
+        return self._output(url=url, header=self.header, params=params)
+
+    def data(self, measure, devices, **kwargs):
         """ Query Arable prod data. One of devices or location must be provided, or no data will be retrieved.
             >>> device="C00####"
             >>> start = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -154,30 +165,21 @@ class ArableClient(object):
             :param speed: optional; string Enum: "mps" "kph" "mph" Speed unit; meters per second [mps], kilometers per hour [kph], or miles per hour [mph]
             :param local_time: optional; string Local time column specified as timezone name, offset seconds or ISO format(e.g. America/Los_Angeles, -14400, -10: 30)(optional)
         """
-
-        self._check_connection()
-
-        url = ArableClient._base_url + "/data/" + table                
+        df = pd.DataFrame()
 
         params = {}
         for param in ArableClient._param_options:
             if kwargs.get(param):
-                params[param] = str(kwargs[param])
-        if not params.get('limit'):
-            params['limit'] = '10000'
-
-        return self._output(url=url, df=df, header=self.header, params=params)
-
-    # def data(self, table, devices=None, **kwargs):
-    #     df = pd.DataFrame()
-    #     # Loop through devices002786'
-    #     for i in devices:
-    #         try:
-    #             df = df.append(client.query(table, device=i, df=True, **kwargs))
-    #         except:
-    #             continue
-    #     df.time = pd.to_datetime(df.time)
-    #     return df
+                    params[param] = str(kwargs[param])
+        for i in devices:
+            try:
+                params['device'] = str(i)
+                # print(params)
+                df = df.append(self._query(measure, params=params))
+            except:
+                continue
+                    
+        return df
 
     def schema(self, table=None, df=False):
         """ See available tables and data dictionary for specific tables
