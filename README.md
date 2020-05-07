@@ -21,7 +21,7 @@ Create a client instance:
     
 Provide credentials:
 
-    client.connect(email='email@domain.com', password='password1'
+    client.connect(email='email@domain.com', password='password1')
     
 Retrieve available tables. Use optional `df` parameter to get response as a pandas DataFrame:
 
