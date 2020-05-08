@@ -16,7 +16,7 @@ Clone repository from GitHub using pip:
 
 Create a client instance:
 
-    from arablepy import arablepy
+    import arablepy
     client = arablepy.ArableClient()
     
 Provide credentials:
