@@ -16,12 +16,12 @@ Clone repository from GitHub using pip:
 
 Create a client instance:
 
-    from arablepy import arablepy
+    import arablepy
     client = arablepy.ArableClient()
     
 Provide credentials:
 
-    client.connect(email='email@domain.com', password='password1'
+    client.connect(email='email@domain.com', password='password1')
     
 Retrieve available tables. Use optional `df` parameter to get response as a pandas DataFrame:
 
