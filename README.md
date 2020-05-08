@@ -1,6 +1,6 @@
 # arable-python-lib
 
-Python cliennt library for [Arable API][Arable API]
+Python client library for [Arable API][Arable API]
 
 **Requirements**: Python 2.7, 3.3+, Pandas 0.24.2
 
