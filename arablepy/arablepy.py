@@ -16,17 +16,19 @@ class ArableClient(object):
     def __init__(self):
         self.header = None
 
-    def _login(self, email=None, password=None, apikey=False):
+    def _login(self, email=None, password=None, apikey=None):
 
         url = "{0}/devices".format(ArableClient._base_url)
+        if apikey:
+            headers = {"Authorization": "Apikey " + apikey}
         # utf-8 encode/decode for python3 support
-        cred = b64encode("{0}:{1}".format(email, password).encode('utf-8')).decode('utf-8')
-        headers = {"Authorization": "Basic " + cred}
+        elif email and password:
+            cred = b64encode("{0}:{1}".format(email, password).encode('utf-8')).decode('utf-8')
+            headers = {"Authorization": "Basic " + cred}
 
         r = requests.get(url, headers=headers)
         if r.status_code == 200:
-            # return {"Authorization": "Bearer " + r.json()['access_token']}
-            return {"Authorization": "Basic " + cred}
+            return headers
         else:
             r.raise_for_status()
 
@@ -70,11 +72,11 @@ class ArableClient(object):
         # todo: reinstate apikeys in docs
         # :param apikey: user 's apikey (a UUID string)
         #
-        # >> > apikey = "<key>"
-        # >> > client.connect(apikey=apikey)
+        # >>> apikey = "<key>"
+        # >>> client.connect(apikey=apikey)
 
         if apikey:
-            self.header = {"Authorization": apikey}
+            self.header = self._login(apikey=apikey)
             return
         elif not all([email, password]):
             raise Exception("Missing parameter; connect requires email and password")
