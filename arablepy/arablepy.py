@@ -21,16 +21,17 @@ class ArableClient(object):
         url = "{0}/devices".format(ArableClient._base_url)
         if apikey:
             headers = {"Authorization": "Apikey " + apikey}
+            return headers
         # utf-8 encode/decode for python3 support
         elif email and password:
             cred = b64encode("{0}:{1}".format(email, password).encode('utf-8')).decode('utf-8')
             headers = {"Authorization": "Basic " + cred}
 
-        r = requests.get(url, headers=headers)
-        if r.status_code == 200:
-            return headers
-        else:
-            r.raise_for_status()
+            r = requests.get(url, headers=headers)
+            if r.status_code == 200:
+                return headers
+            else:
+                r.raise_for_status()
 
     def _check_connection(self):
         """ Returns True if client has auth token, raises an exception if not. """
@@ -56,11 +57,70 @@ class ArableClient(object):
         else:
             r.raise_for_status()
 
-    def apikeys(self, scopes=None, name=None, exp=None, active=True):
+    # class apikeys:
+
+    #     def __init__(self):
+    #         self.header = ArableClient.header
+        
+    def create_apikey(self, scopes=None, name=None, exp=None):
         """
         """
 
+        ArableClient._check_connection()
+
         url = ArableClient._base_url + "/apikeys"
+        params = {}
+        if scopes is not None:
+            params["scopes"] = scopes
+        if name is not None:
+            params["name"] = name
+        if exp is not None:
+            params["exp"] = exp
+        headers = self.header.copy()
+        headers.update({"content-type": "application/json"})
+
+        r = requests.post(url, headers=headers, json=params)
+        if r.status_code == 200:
+            return r.json()['apikey']
+        else:
+            r.raise_for_status()
+
+
+
+    def list_apikeys(self, df=False):
+        """
+        """
+
+        self._check_connection()
+
+        url = ArableClient._base_url + "/apikeys"
+
+        return self._output(url=url, df=df, header=self.header)
+
+    def delete_apikeys(self, apikey_id):
+        """
+        """
+
+        self._check_connection()
+
+        for i in apikey_id:
+
+            url = ArableClient._base_url + "/apikeys/" + i
+
+
+            r = requests.delete(url, headers=self.header)
+
+            if r.status_code == 200:
+                print("Apikey with ID " + i + " was deleted")
+    def scopes(self, df=False):
+        """
+        """
+
+        self._check_connection()
+
+        url = ArableClient._base_url + "/apikeys/scopes"
+
+        return self._output(url=url, df=df, header=self.header)
 
 
     def connect(self, email=None, password=None, apikey=None):
