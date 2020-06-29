@@ -37,7 +37,7 @@ Retrieve data dictionary for a specific table:
 ```    
 Query data:
 ```python
-    client.data('daily', device='C00####', start_time='2020-01-01T00:00:00Z', end_time='2020-03-26', df=True)
+    client.data('daily', devices=['C00####'], start_time='2020-01-01T00:00:00Z', end_time='2020-03-26')
 ```    
 QUERY PARAMETERS
 
