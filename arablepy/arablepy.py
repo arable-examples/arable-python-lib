@@ -10,8 +10,8 @@ class ArableClient(object):
         >>> client.connect(email='user@loremipsum.com', password='#@#SS')
     """
     _base_url = "https://api.arable.cloud/api/v2"
-    _param_options = {"device","end_time", "format", "limit", "location", "measure", "order", "select", "start_time", "temp"
-                        "pres", "ratio", "size", "speed", "local_time"}
+    _param_options = {"device", "end_time", "format", "limit", "location", "measure", "order", "select", "start_time", "temp"
+                      "pres", "ratio", "size", "speed", "local_time"}
 
     def __init__(self):
         self.header = None
@@ -43,7 +43,7 @@ class ArableClient(object):
         r = requests.get(url, headers=header, params=params)
         data = r.json()
         if 200 == r.status_code:
-            if df == True:
+            if df is True:
                 if isinstance(data, dict):
                     if 'items' in data.keys():
                         a = len(data['items'])
@@ -61,7 +61,7 @@ class ArableClient(object):
 
     #     def __init__(self):
     #         self.header = ArableClient.header
-        
+
     def create_apikey(self, scopes=None, name=None, exp=None):
         """
         """
@@ -85,8 +85,6 @@ class ArableClient(object):
         else:
             r.raise_for_status()
 
-
-
     def list_apikeys(self, df=False):
         """
         """
@@ -107,11 +105,11 @@ class ArableClient(object):
 
             url = ArableClient._base_url + "/apikeys/" + i
 
-
             r = requests.delete(url, headers=self.header)
 
             if r.status_code == 200:
                 print("Apikey with ID " + i + " was deleted")
+
     def scopes(self, df=False):
         """
         """
@@ -121,7 +119,6 @@ class ArableClient(object):
         url = ArableClient._base_url + "/apikeys/scopes"
 
         return self._output(url=url, df=df, header=self.header)
-
 
     def connect(self, email=None, password=None, apikey=None):
         """ Logs the client in to the API.
@@ -156,7 +153,7 @@ class ArableClient(object):
                 e.g. "name" for name ascending or "-name" for name descending (default "-last_post")
             :param limit: optional; max number of devices to retrieve when looking up multiple (default 24)
             :param page: optional; results page to retrieve when looking up multiple devices (default 1)
-            :param battery: optional; shows battery percentage for 
+            :param battery: optional; shows battery percentage for
         """
 
         self._check_connection()
@@ -172,8 +169,8 @@ class ArableClient(object):
                 url += "/locations"
             elif find:
                 url += "/find"
-           # elif email:
-               # url += "/email"
+            # elif email:
+            #     url += "/email"
 
         params = {}
         if order is not None:
@@ -181,7 +178,7 @@ class ArableClient(object):
         if order_by is not None or name:
             params['order_by'] = order_by
         else:
-            params['order_by'] = 'state'    
+            params['order_by'] = 'state'
         if limit is not None:
             params['limit'] = limit
         if page is not None:
@@ -189,15 +186,14 @@ class ArableClient(object):
         if days is not None:
             params['days'] = days
 
-
-            # r = requests.post(url, headers=self, )
+        # r = requests.post(url, headers=self, )
         return self._output(url=url, df=df, header=self.header, params=params)
 
     def _query(self, table, params=None):
 
         self._check_connection()
 
-        url = ArableClient._base_url + "/data/" + table                
+        url = ArableClient._base_url + "/data/" + table
 
         if not params.get('limit'):
             params['limit'] = '10000'
@@ -232,7 +228,7 @@ class ArableClient(object):
         params = {}
         for param in ArableClient._param_options:
             if kwargs.get(param):
-                    params[param] = str(kwargs[param])
+                params[param] = str(kwargs[param])
         for i in devices:
             try:
                 params['device'] = str(i)
@@ -240,7 +236,7 @@ class ArableClient(object):
                 df = df.append(self._query(measure, params=params))
             except:
                 continue
-                    
+
         return df
 
     def schema(self, table=None, df=False):
@@ -273,10 +269,8 @@ class ArableClient(object):
         return self._output(url=url, df=df, header=self.header, params=params)
 
     # class Locations(object):
-        
-    #     def __init__(self):
-            
 
+    #     def __init__(self):
 
     def orgs(self, org_id=None, param=None, df=False):
         """
@@ -296,13 +290,13 @@ class ArableClient(object):
         self._check_connection()
 
         url = ArableClient._base_url + "/search"
-        if suggest == True:
+        if suggest is True:
             url += "/suggestions"
 
         params = {}
         params['name'] = name
 
-        return self._output(url=url, df=df, header=self.header, params=params)       
+        return self._output(url=url, df=df, header=self.header, params=params)
 
     def team(self):
         pass
